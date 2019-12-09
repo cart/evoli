@@ -12,6 +12,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::components::{
     collider::Circle, combat::CombatPrefabData, digestion::DigestionPrefabData,
+    
     perception::Perception,
 };
 

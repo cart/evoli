@@ -11,6 +11,7 @@ log = "0.4.6"
 smart-default = "0.5.2"
 serde = "1.0.90"
 thread_profiler = "0.3.0"
+amethyst_precompile = { path = "amethyst_precompile" }
 
 # TODO: update dependencies for Amethyst newest version
 #amethyst_test = "0.2.0"

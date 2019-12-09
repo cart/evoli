@@ -32,6 +32,8 @@ impl Default for LoadingState {
 impl SimpleState for LoadingState {
     fn on_start(&mut self, mut data: StateData<GameData>) {
         load_factions(data.world);
+
+        // commenting this line out saves ~4 seconds
         self.prefab_loading_progress = Some(initialize_prefabs(&mut data.world));
         initialise_audio(data.world);
         data.world

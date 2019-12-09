@@ -1,0 +1,10 @@
+[package]
+name = "amethyst_precompile"
+version = "0.1.0"
+authors = ["Carter Anderson <mcanders1@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+amethyst = { git = "https://github.com/amethyst/amethyst.git", rev = "9709f4f", features = ["vulkan", "gltf"]}

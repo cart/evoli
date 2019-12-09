@@ -293,6 +293,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "amethyst_precompile"
+version = "0.1.0"
+dependencies = [
+ "amethyst 0.11.1 (git+https://github.com/amethyst/amethyst.git?rev=9709f4f)",
+]
+
+[[package]]
 name = "amethyst_rendy"
 version = "0.1.2"
 source = "git+https://github.com/amethyst/amethyst.git?rev=9709f4f#9709f4fdddffcfef4d17f342260b4bb0e976e9b1"
@@ -1171,6 +1178,7 @@ name = "evolution-island"
 version = "0.2.0"
 dependencies = [
  "amethyst 0.11.1 (git+https://github.com/amethyst/amethyst.git?rev=9709f4f)",
+ "amethyst_precompile 0.1.0",
  "log 0.4.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "rand 0.6.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.97 (registry+https://github.com/rust-lang/crates.io-index)",

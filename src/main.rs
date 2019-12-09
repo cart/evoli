@@ -3,33 +3,24 @@ extern crate log;
 
 use amethyst::assets::PrefabLoaderSystem;
 use amethyst::{
-    assets::Processor,
-    audio::{AudioBundle, DjSystem},
-    core::frame_limiter::FrameRateLimitStrategy,
-    core::transform::TransformBundle,
+    audio::DjSystem,
     gltf::GltfSceneLoaderSystem,
-    input::{InputBundle, StringBindings},
     prelude::*,
-    renderer::{
-        sprite_visibility::SpriteVisibilitySortingSystem, types::DefaultBackend,
-        visibility::VisibilitySortingSystem, RenderingSystem, SpriteSheet,
-    },
-    ui::UiBundle,
     utils::application_root_dir,
-    window::{DisplayConfig, WindowBundle},
+    window::DisplayConfig,
 };
 
 mod components;
-mod render_graph;
 mod resources;
 mod states;
 mod systems;
 mod utils;
 
 use crate::components::{combat, creatures};
-use crate::render_graph::RenderGraph;
 use crate::resources::audio::Music;
 use crate::states::loading::LoadingState;
+
+use amethyst_precompile::{PrecompiledRenderBundle, PrecompiledDefaultsBundle, PrecompiledSpriteBundle, start_game};
 
 fn main() -> amethyst::Result<()> {
     amethyst::start_logger(Default::default());
@@ -49,9 +40,6 @@ fn main() -> amethyst::Result<()> {
     // will define additional dispatchers for state specific systems. Note that the dispatchers will run in sequence,
     // so this setup sacrifices performance for modularity (for now).
     let game_data = GameDataBuilder::default()
-        .with_bundle(
-            InputBundle::<StringBindings>::new().with_bindings_from_file(&key_bindings_path)?,
-        )?
         .with(
             PrefabLoaderSystem::<creatures::CreaturePrefabData>::default(),
             "creature_loader",
@@ -72,34 +60,24 @@ fn main() -> amethyst::Result<()> {
             "dj",
             &[],
         )
-        .with_bundle(TransformBundle::new())?
-        .with_bundle(AudioBundle::default())?
-        .with_bundle(WindowBundle::from_config(display_config))?
-        .with_bundle(UiBundle::<DefaultBackend, StringBindings>::new())?
-        .with(
-            Processor::<SpriteSheet>::new(),
-            "sprite_sheet_processor",
-            &[],
-        )
-        .with(
-            VisibilitySortingSystem::new(),
-            "visibility_system",
-            &["transform_system"],
-        )
-        .with(
-            SpriteVisibilitySortingSystem::new(),
-            "sprite_visibility_system",
-            &["transform_system"],
-        )
-        .with_thread_local(RenderingSystem::<DefaultBackend, _>::new(
-            RenderGraph::default(),
-        ));
+        
+        // .with_bundle(TransformBundle::new())?
+        // .with_bundle(AudioBundle::default())?
+        // .with_bundle(WindowBundle::from_config(display_config))?
+        // .with_bundle(UiBundle::<DefaultBackend, StringBindings>::new())?
+        .with_bundle(PrecompiledDefaultsBundle{
+            key_bindings_path: &key_bindings_path,
+            display_config: display_config
+        })?
+        .with_bundle(PrecompiledRenderBundle{})?
+        .with_bundle(PrecompiledSpriteBundle{})?;
 
     // Set up the core application.
-    let mut game: Application<GameData> =
-        CoreApplication::build(resources, LoadingState::default())?
-            .with_frame_limit(FrameRateLimitStrategy::Sleep, 60)
-            .build(game_data)?;
-    game.run();
+
+    start_game(&resources, game_data, Some(Box::new(LoadingState::default())));
+        // CoreApplication::build(resources, LoadingState::default())?
+        //     .with_frame_limit(FrameRateLimitStrategy::Sleep, 60)
+        //     .build(game_data)?;
+    // game.run();
     Ok(())
 }
